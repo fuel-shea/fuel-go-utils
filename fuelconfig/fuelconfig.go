@@ -8,14 +8,15 @@ import (
 )
 
 type Config struct {
-	DBHost string
-	DBName string
+	DBHost  string
+	DBName  string
+	AppPort string
 }
 
 func CreateConfig(appName string) (Config, error) {
 	env := os.Getenv("APP_ENV")
 	if env == "" {
-		env = "DEVELOPMENT"
+		env = "development"
 	}
 	configFilename := appName + "." + env + ".config.json"
 

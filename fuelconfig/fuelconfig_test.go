@@ -14,10 +14,11 @@ type testCase struct {
 	appName string
 	dbHost  string
 	dbName  string
+	appPort string
 }
 
 var testCases = []testCase{
-	testCase{"TESTCONFIG", "testconfigapp", "testinghost", "testingname"},
+	testCase{"testconfig", "testconfigapp", "testinghost", "testingname", "testingport"},
 }
 
 func TestCreateConfig(t *testing.T) {
@@ -46,7 +47,11 @@ func runTestCase(t *testing.T, tc testCase) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	configFile.WriteString(fmt.Sprintf(`{"DBHost": %q, "DBName": %q}`, tc.dbHost, tc.dbName))
+	configFile.WriteString(fmt.Sprintf(
+		`{"DBHost": %q, "DBName": %q, "AppPort": %q}`,
+		tc.dbHost,
+		tc.dbName,
+		tc.appPort))
 	defer configFile.Close()
 
 	// run the function to test
@@ -59,5 +64,8 @@ func runTestCase(t *testing.T, tc testCase) {
 	}
 	if conf.DBName != tc.dbName {
 		t.Error("Expected conf.DBName to be '", tc.dbName, "', but got", conf.DBHost)
+	}
+	if conf.AppPort != tc.appPort {
+		t.Error("Expected conf.AppPort to be '", tc.appPort, "', but got", conf.AppPort)
 	}
 }
